@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.8; // ^ any version above is OK
+pragma solidity ^0.8.8; // ^ any version above is OK
 
 
 // similar to a class
