@@ -14,7 +14,6 @@ contract FundMe {
         // 1*10^18 gwei = 1 ETH
         require (msg.value >= minUsd, "Did not reach min. 1ETH fund");
 
-        // revert - undoes any actions and sends gas back
     }
     // function withdraw() private {
 
