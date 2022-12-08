@@ -6,20 +6,23 @@ pragma solidity ^0.8.8;
 
 import "./PriceConverter.sol";
 
+error NotOwner();
+
 contract FundMe { 
     using PriceConverter for uint256;
 
 
     // lets keep track of the funders
-    address[] public funders;
     mapping(address => uint256) public addressToAmountFunded;
-    address public owner;
+    address[] public funders;
+    address public immutable i_owner;
 
-    uint256 public minUsd = 50 * 1e18;
-    // do something
+    // CONSTANT_VARIABLES
+    uint256 public constant MIN_USD = 50   * 1e18;
+    
     // gets called immediately w hen you run FundMe
     constructor () {
-        owner = msg.sender; //whoever deploys the contract
+        i_owner = msg.sender; //whoever deploys the contract
     }
 
     // contracts + wallet can hold tokens! :) 
@@ -29,8 +32,8 @@ contract FundMe {
         // Use decentralized oracle net (ChainLink) to convert USD to ETH
 
         // 1*10^18 gwei = 1 ETH
-        // require (getConversionRate(msg.value) >= minUsd, "Did not reach min. 1ETH fund");
-        require (msg.value.getConversionRate() >= minUsd, "Did not reach min. 1ETH fund");
+        // require (getConversionRate(msg.value) >= MIN_USD, "Did not reach min. 1ETH fund");
+        require (msg.value.getConversionRate() >= MIN_USD, "Did not reach min. 1ETH fund");
 
 
         // revert - undoes any actions and sends gas back
@@ -62,7 +65,11 @@ contract FundMe {
 
     // modifier - extract one line to a single keyword
     modifier onlyOwner{
-        require(msg.sender == owner, "Sender is not the owner!!");
+        // require(msg.sender == i_owner, "Sender is not the owner!!");
+        if(msg.sender != i_owner) { revert NotOwner(); }
         _; // do the rest of the code, must be BELOW require
     }
-}   
+
+    // Special functions - 1 max - receive() & fallback()
+        
+    }   
