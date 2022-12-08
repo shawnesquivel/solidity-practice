@@ -18,7 +18,7 @@ contract FundMe {
     address public immutable i_owner;
 
     // CONSTANT_VARIABLES
-    uint256 public constant MIN_USD = 50   * 1e18;
+    uint256 public constant MIN_USD = 0.02 * 1e18;
     
     // gets called immediately w hen you run FundMe
     constructor () {
@@ -37,8 +37,8 @@ contract FundMe {
 
 
         // revert - undoes any actions and sends gas back
+        addressToAmountFunded[msg.sender] += msg.value;
         funders.push(msg.sender);
-        addressToAmountFunded[msg.sender] = msg.value;
     }
 
     function withdraw() public onlyOwner {    
@@ -71,5 +71,11 @@ contract FundMe {
     }
 
     // Special functions - 1 max - receive() & fallback()
-        
+        receive() external payable {
+            fund();
+        }
+
+        fallback() external payable {
+            fund();
+        }
     }   
