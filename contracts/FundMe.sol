@@ -13,11 +13,18 @@ contract FundMe {
     // lets keep track of the funders
     address[] public funders;
     mapping(address => uint256) public addressToAmountFunded;
+    address public owner;
+
+    uint256 public minUsd = 50 * 1e18;
+    
+    // gets called immediately w hen you run FundMe
+    constructor () {
+        owner = msg.sender; //whoever deploys the contract
+    }
 
     // contracts + wallet can hold tokens! :) 
     function fund() public payable {
         // to get the $ amount -> msg.value;
-        uint256 minUsd = 50 * 1e18;
 
         // Use decentralized oracle net (ChainLink) to convert USD to ETH
 
@@ -31,8 +38,8 @@ contract FundMe {
         addressToAmountFunded[msg.sender] = msg.value;
     }
 
-  
-    function withdraw() public {
+    function withdraw() public onlyOwner {    
+
         for (uint256 funderIndex=0; funderIndex < funders.length; funderIndex++){
             address funder = funders[funderIndex];
             addressToAmountFunded[funder] = 0;
@@ -51,7 +58,11 @@ contract FundMe {
         // send
         // bool sendSuccess = payable(msg.sender).send(address(this).balance);
         // require(sendSuccess, "Sorry, the send failed");
-
     }
 
-}
+    // modifier - extract one line to a single keyword
+    modifier onlyOwner{
+        require(msg.sender == owner, "Sender is not the owner!!");
+        _; // do the rest of the code, must be BELOW require
+    }
+}   
