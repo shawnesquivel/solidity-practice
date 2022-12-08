@@ -16,7 +16,7 @@ contract FundMe {
     address public owner;
 
     uint256 public minUsd = 50 * 1e18;
-    
+    // do something
     // gets called immediately w hen you run FundMe
     constructor () {
         owner = msg.sender; //whoever deploys the contract
