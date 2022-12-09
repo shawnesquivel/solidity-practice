@@ -5,11 +5,11 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 // attach a library
 
-library PriceConverter{ 
+library PriceConverter {
     // 1. functions are all internal
     // 2. cannot have state variables
     // 3. cant send ether
-      // We could make this internal, but then we'd have to deploy it
+    // We could make this internal, but then we'd have to deploy it
     function getPrice() internal view returns (uint256) {
         // Goerli ETH / USD Address
         // https://docs.chain.link/docs/ethereum-addresses/
@@ -24,20 +24,20 @@ library PriceConverter{
     }
 
     // convert msg.value to dollars
-    function getConversionRate(uint256 ethAmount) internal view returns (uint256) {
+    function getConversionRate(
+        uint256 ethAmount
+    ) internal view returns (uint256) {
         // Get the price in ETH/USD
         uint256 ethPrice = getPrice(); // usd/eth
         uint256 ethAmountInUsd = (ethAmount * ethPrice) / 1e18;
         return ethAmountInUsd;
     }
 
-
-     function getVersion() internal view returns (uint256){
+    function getVersion() internal view returns (uint256) {
         // ETH/USD price feed address of Goerli Network.
-        AggregatorV3Interface priceFeed = AggregatorV3Interface(0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e);
+        AggregatorV3Interface priceFeed = AggregatorV3Interface(
+            0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e
+        );
         return priceFeed.version();
     }
-    
-
-
 }
